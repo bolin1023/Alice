@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alice in Wonderland - Interactive Script</title>
+    <title>Alice Script - Part 1 (Final Layout)</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f8ff;
+            background-color: #fff5e6;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -16,6 +16,48 @@
             margin: 0;
             overflow: hidden;
         }
+        
+        /* 設定區域容器 */
+        .settings-bar {
+            position: absolute;
+            top: 15px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 10px 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column; /* 垂直堆疊 */
+            gap: 5px; /* 兩列之間的間距 */
+            align-items: flex-start; /* 讓內容靠左對齊 */
+            justify-content: center;
+            z-index: 10;
+            width: 90%;
+            max-width: 500px; /* 稍微縮小以配合兩列 */
+        }
+        
+        /* 每一列設定的樣式 */
+        .setting-row { 
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 5px 0;
+        }
+
+        label {
+            margin-right: 5px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            min-width: 60px; /* 確保標籤對齊 */
+        }
+
+        select {
+            font-size: 1rem;
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            flex-grow: 1; /* 讓選單佔滿剩餘空間 */
+        }
+
         #stage {
             width: 90%;
             max-width: 600px;
@@ -25,20 +67,24 @@
             padding: 30px;
             text-align: center;
             position: relative;
-            min-height: 400px;
+            min-height: 450px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            transition: border-color 0.5s;
+            margin-top: 100px; /* 騰出足夠空間給兩列設定區 */
         }
+        
+        /* [保持其他樣式不變] */
         #scene-title {
             font-size: 1.2rem;
             color: #666;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
             font-weight: bold;
         }
         #character-img {
             font-size: 80px;
-            margin: 20px 0;
+            margin: 10px 0;
             animation: bounce 2s infinite;
         }
         #character-name {
@@ -52,23 +98,28 @@
             line-height: 1.5;
             color: #333;
             min-height: 100px;
+            margin-bottom: 20px;
         }
         .controls {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 2fr; 
+            gap: 10px;
+            margin-top: auto;
         }
         button {
-            padding: 15px 30px;
-            font-size: 1.2rem;
+            padding: 15px 10px;
+            font-size: 1rem;
             border: none;
-            border-radius: 50px;
+            border-radius: 15px;
             cursor: pointer;
             transition: transform 0.1s;
+            font-weight: bold;
         }
         button:active { transform: scale(0.95); }
-        #btn-prev { background-color: #ccc; color: #333; }
-        #btn-next { background-color: #4CAF50; color: white; font-weight: bold; flex-grow: 1; margin-left: 10px;}
+        
+        #btn-prev { background-color: #e0e0e0; color: #333; }
+        #btn-replay { background-color: #2196F3; color: white; } 
+        #btn-next { background-color: #FF9800; color: white; font-size: 1.2rem; }
         
         @keyframes bounce {
             0%, 100% { transform: translateY(0); }
@@ -76,25 +127,45 @@
         }
         
         /* Scene Themes */
-        .scene-5 { border-top: 10px solid #ff4d4d; } /* Red for Roses */
-        .scene-6 { border-top: 10px solid #4dff88; } /* Green for Games */
-        .scene-7 { border-top: 10px solid #4d88ff; } /* Blue for Home/Dream */
+        .scene-1 { border-top: 10px solid #8bc34a; }
+        .scene-2 { border-top: 10px solid #e91e63; }
+        .scene-3 { border-top: 10px solid #673ab7; }
+        .scene-4 { border-top: 10px solid #f44336; }
     </style>
 </head>
 <body>
- 
-<div id="stage" class="scene-5">
-    <div id="scene-title">Scene 5: Paint the Roses</div>
-    <div id="character-img">👑</div>
-    <div id="character-name">Narrator</div>
-    <div id="dialogue">Click "Next" to start the story!</div>
+
+<div class="settings-bar">
+    <div class="setting-row">
+        <label for="voiceSelect">🗣️ Voice:</label>
+        <select id="voiceSelect">
+            <option value="">Loading...</option>
+        </select>
+    </div>
+    
+    <div class="setting-row">
+        <label for="rateSelect">⏱️ Speed:</label>
+        <select id="rateSelect">
+            <option value="0.9">Normal (正常)</option>
+            <option value="0.7">Slow (慢)</option>
+            <option value="0.5" selected>Slower (更慢)</option>
+        </select>
+    </div>
+</div>
+
+<div id="stage" class="scene-1">
+    <div id="scene-title"> </div>
+    <div id="character-img">👱‍♀️</div>
+    <div id="character-name">Alice in Wonderland</div>
+    <div id="dialogue">Select Voice & Speed above, then click "Next"!</div>
     
     <div class="controls">
         <button id="btn-prev" onclick="prevLine()">Back</button>
-        <button id="btn-next" onclick="nextLine()">Next (Speak) ▶</button>
+        <button id="btn-replay" onclick="replayLine()">Replay 🔄</button>
+        <button id="btn-next" onclick="nextLine()">Next ▶</button>
     </div>
 </div>
- 
+
 <script>
     // 劇本資料庫
     const scriptData = [
@@ -112,7 +183,7 @@
         { s: 5, r: "Song", e: "🎵", t: "(Singing Painting Song... La La La...)" },
         { s: 5, r: "Cheshire Cat", e: "😼", t: "Good Job! You are all great helper." },
         { s: 5, r: "Rabbit", e: "🐰", t: "We all like to help our friends." },
- 
+
         // Scene 6
         { s: 6, r: "Narrator", e: "📖", t: "After painting, Alice and her friends want to have fun together." },
         { s: 6, r: "Alice", e: "👱‍♀️", t: "Hey! I want to play a game. Who wants to join the game?" },
@@ -131,7 +202,7 @@
         { s: 6, r: "Cat", e: "😼", t: "Friendship makes every game special!" },
         { s: 6, r: "Rabbit", e: "🐰", t: "Everyone needs friends." },
         { s: 6, r: "Queen", e: "👑", t: "Alice, you have learned a lot here, I will send you home! Abracadabra!" },
- 
+
         // Scene 7
         { s: 7, r: "Narrator", e: "📖", t: "Suddenly, everything starts to sparkle... Alice opens her eyes. She's back in the garden." },
         { s: 7, r: "Alice", e: "👱‍♀️", t: "Huh? I'm home? Was it... a dream?" },
@@ -145,37 +216,104 @@
         { s: 7, r: "Song", e: "🎵", t: "(Good-bye song playing...)" },
         { s: 7, r: "All", e: "👨‍👩‍👧‍👦", t: "Goodbye, see you next time in Wonderland!" }
     ];
- 
+
     let currentIndex = -1;
     const synth = window.speechSynthesis;
- 
+    let voices = [];
+    const voiceSelect = document.getElementById('voiceSelect');
+    const rateSelect = document.getElementById('rateSelect'); 
+
+    // 1. 載入並列出所有可用的聲音 (並設定 Samantha 為預設)
+    function populateVoiceList() {
+        voices = synth.getVoices().sort(function (a, b) {
+            const aname = a.name.toUpperCase(), bname = b.name.toUpperCase();
+            if ( aname < bname ) return -1;
+            if ( aname > bname ) return 1;
+            return 0;
+        });
+        
+        voiceSelect.innerHTML = '';
+        const defaultOption = document.createElement('option');
+        defaultOption.textContent = '-- Choose Voice --';
+        voiceSelect.appendChild(defaultOption);
+
+        const englishVoices = voices.filter(v => v.lang.includes('en'));
+        let samanthaFound = false;
+
+        englishVoices.forEach((voice) => {
+            const option = document.createElement('option');
+            // 簡化顯示名稱
+            option.textContent = `${voice.name.replace('Microsoft', '').replace('Google', '')}`; 
+            option.setAttribute('data-lang', voice.lang);
+            option.setAttribute('data-name', voice.name);
+            
+            // 設定 Samantha 為預設
+            if (voice.name.includes('Samantha')) {
+                option.selected = true;
+                samanthaFound = true;
+            }
+
+            voiceSelect.appendChild(option);
+        });
+
+        // 如果 Samantha 沒找到，則選取清單中的第一個英文語音作為預設
+        if (!samanthaFound && englishVoices.length > 0) {
+             voiceSelect.selectedIndex = 1; // 選擇第一個有效的語音 (index 0 是 --Choose Voice--)
+        }
+    }
+
+    populateVoiceList();
+    if (speechSynthesis.onvoiceschanged !== undefined) {
+        speechSynthesis.onvoiceschanged = populateVoiceList;
+    }
+
+    // 2. 更新畫面顯示
     function updateDisplay() {
         if (currentIndex < 0) return;
         const line = scriptData[currentIndex];
         
-        // Update Text
-        document.getElementById('scene-title').innerText = line.s === 5 ? "Scene 5: Paint the Roses" : (line.s === 6 ? "Scene 6: Tea & Games" : "Scene 7: Goodbye");
+        let sceneName = "";
+        if(line.s === 1) sceneName = "Scene 1: Curious Garden";
+        else if(line.s === 2) sceneName = "Scene 2: The Rabbit Hole";
+        else if(line.s === 3) sceneName = "Scene 3: Down the Hole";
+        else sceneName = "Scene 4: The Queen's Rules";
+
+        document.getElementById('scene-title').innerText = sceneName;
         document.getElementById('character-name').innerText = line.r;
         document.getElementById('character-img').innerText = line.e;
         document.getElementById('dialogue').innerText = line.t;
- 
-        // Update Theme Color
+
         const stage = document.getElementById('stage');
-        stage.className = ''; // clear classes
+        stage.className = ''; 
         stage.classList.add('scene-' + line.s);
     }
- 
+
+    // 3. 朗讀功能 (加入聲音與語速控制)
     function speakText(text) {
         if (synth.speaking) {
             synth.cancel();
         }
         const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'en-US'; // 設定為美式發音
-        utterance.rate = 0.9; // 稍微放慢速度適合兒童
-        utterance.pitch = 1.1; // 稍微調高音調比較活潑
+        
+        // A. 設定聲音
+        const selectedOption = voiceSelect.selectedOptions[0];
+        if (selectedOption && selectedOption.getAttribute('data-name')) {
+            const selectedVoiceName = selectedOption.getAttribute('data-name');
+            const selectedVoice = voices.find(v => v.name === selectedVoiceName);
+            if (selectedVoice) utterance.voice = selectedVoice;
+        } else {
+            utterance.lang = 'en-US'; 
+        }
+
+        // B. 設定語速 (從選單讀取)
+        const selectedRate = parseFloat(rateSelect.value);
+        utterance.rate = selectedRate;
+
+        utterance.pitch = 1.1; 
         synth.speak(utterance);
     }
- 
+
+    // 4. 按鈕功能
     function nextLine() {
         if (currentIndex < scriptData.length - 1) {
             currentIndex++;
@@ -183,14 +321,20 @@
             speakText(scriptData[currentIndex].t);
         }
     }
- 
+
     function prevLine() {
         if (currentIndex > 0) {
             currentIndex--;
             updateDisplay();
         }
     }
+
+    function replayLine() {
+        if (currentIndex >= 0) {
+            speakText(scriptData[currentIndex].t);
+        }
+    }
 </script>
- 
+
 </body>
 </html>
