@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alice in Wonderland - Interactive Script</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f8ff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+        }
+        #stage {
+            width: 90%;
+            max-width: 600px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        #scene-title {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        #character-img {
+            font-size: 80px;
+            margin: 20px 0;
+            animation: bounce 2s infinite;
+        }
+        #character-name {
+            font-size: 1.5rem;
+            color: #d63384;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        #dialogue {
+            font-size: 1.4rem;
+            line-height: 1.5;
+            color: #333;
+            min-height: 100px;
+        }
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+        button:active { transform: scale(0.95); }
+        #btn-prev { background-color: #ccc; color: #333; }
+        #btn-next { background-color: #4CAF50; color: white; font-weight: bold; flex-grow: 1; margin-left: 10px;}
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        /* Scene Themes */
+        .scene-5 { border-top: 10px solid #ff4d4d; } /* Red for Roses */
+        .scene-6 { border-top: 10px solid #4dff88; } /* Green for Games */
+        .scene-7 { border-top: 10px solid #4d88ff; } /* Blue for Home/Dream */
+    </style>
+</head>
+<body>
+ 
+<div id="stage" class="scene-5">
+    <div id="scene-title">Scene 5: Paint the Roses</div>
+    <div id="character-img">👑</div>
+    <div id="character-name">Narrator</div>
+    <div id="dialogue">Click "Next" to start the story!</div>
+    
+    <div class="controls">
+        <button id="btn-prev" onclick="prevLine()">Back</button>
+        <button id="btn-next" onclick="nextLine()">Next (Speak) ▶</button>
+    </div>
+</div>
+ 
+<script>
+    // 劇本資料庫
+    const scriptData = [
+        // Scene 5
+        { s: 5, r: "Narrator", e: "📖", t: "Alice arrives at the Queen's Garden." },
+        { s: 5, r: "Queen", e: "👑", t: "Welcome, Alice! Do you like my red roses?" },
+        { s: 5, r: "Alice", e: "👱‍♀️", t: "Yes! They are beautiful, My Queen." },
+        { s: 5, r: "Queen", e: "👑", t: "Cards! I want more red roses! Quickly!" },
+        { s: 5, r: "Cards", e: "🃏", t: "Yes, my Queen! Red, red, red! Paint to roses red. Hey! Don't spill the paint." },
+        { s: 5, r: "Alice", e: "👱‍♀️", t: "Be careful! Do you want me to help, My Queen?" },
+        { s: 5, r: "Queen", e: "👑", t: "Yes, Alice. Thank you. Alice You are a great helper." },
+        { s: 5, r: "Cards", e: "🃏", t: "Wow! Alice is fast! Let's finish it soon! Don't forget the small roses, too!" },
+        { s: 5, r: "Rabbit", e: "🐰", t: "Can I paint too? I like painting!" },
+        { s: 5, r: "Hatter", e: "🎩", t: "Me me me! It sounds fun! I want to join you guys!" },
+        { s: 5, r: "Song", e: "🎵", t: "(Singing Painting Song... La La La...)" },
+        { s: 5, r: "Cheshire Cat", e: "😼", t: "Good Job! You are all great helper." },
+        { s: 5, r: "Rabbit", e: "🐰", t: "We all like to help our friends." },
+ 
+        // Scene 6
+        { s: 6, r: "Narrator", e: "📖", t: "After painting, Alice and her friends want to have fun together." },
+        { s: 6, r: "Alice", e: "👱‍♀️", t: "Hey! I want to play a game. Who wants to join the game?" },
+        { s: 6, r: "Hatter", e: "🎩", t: "Let's play 'Green Light, Red Light'!" },
+        { s: 6, r: "Alice", e: "👱‍♀️", t: "Okay, are you ready?" },
+        { s: 6, r: "All", e: "👨‍👩‍👧‍👦", t: "Ready!" },
+        { s: 6, r: "Alice", e: "👱‍♀️", t: "Green Light... Red Light!" },
+        { s: 6, r: "Card 1", e: "🃏", t: "I saw Hatter nod his head!" },
+        { s: 6, r: "Hatter", e: "🎩", t: "Okay, I'm out." },
+        { s: 6, r: "Alice", e: "👱‍♀️", t: "Green Light... Red Light!" },
+        { s: 6, r: "Card", e: "🃏", t: "Alice! I saw rabbit flap his ears!" },
+        { s: 6, r: "Rabbit", e: "🐰", t: "Oh.... I can't help it. Okay, I'm out." },
+        { s: 6, r: "Alice", e: "👱‍♀️", t: "Green Light... Red Light!" },
+        { s: 6, r: "Cat", e: "😼", t: "Yah! I win the game!" },
+        { s: 6, r: "Hatter", e: "🎩", t: "Tea time, let's take a break." },
+        { s: 6, r: "Cat", e: "😼", t: "Friendship makes every game special!" },
+        { s: 6, r: "Rabbit", e: "🐰", t: "Everyone needs friends." },
+        { s: 6, r: "Queen", e: "👑", t: "Alice, you have learned a lot here, I will send you home! Abracadabra!" },
+ 
+        // Scene 7
+        { s: 7, r: "Narrator", e: "📖", t: "Suddenly, everything starts to sparkle... Alice opens her eyes. She's back in the garden." },
+        { s: 7, r: "Alice", e: "👱‍♀️", t: "Huh? I'm home? Was it... a dream?" },
+        { s: 7, r: "Rabbit", e: "🐰", t: "Maybe yes... maybe not!" },
+        { s: 7, r: "Cat", e: "😼", t: "Wonderland is always in your heart, Alice." },
+        { s: 7, r: "Alice", e: "👱‍♀️", t: "I remember everything — the games, the fun, and being brave!" },
+        { s: 7, r: "Hatter", e: "🎩", t: "Don't forget the tea party!" },
+        { s: 7, r: "Cards", e: "🃏", t: "I really like to have you here." },
+        { s: 7, r: "Queen", e: "👑", t: "We're so proud of you, dear Alice!" },
+        { s: 7, r: "Alice", e: "👱‍♀️", t: "I'll never forget you all, my wonderful friends!" },
+        { s: 7, r: "Song", e: "🎵", t: "(Good-bye song playing...)" },
+        { s: 7, r: "All", e: "👨‍👩‍👧‍👦", t: "Goodbye, see you next time in Wonderland!" }
+    ];
+ 
+    let currentIndex = -1;
+    const synth = window.speechSynthesis;
+ 
+    function updateDisplay() {
+        if (currentIndex < 0) return;
+        const line = scriptData[currentIndex];
+        
+        // Update Text
+        document.getElementById('scene-title').innerText = line.s === 5 ? "Scene 5: Paint the Roses" : (line.s === 6 ? "Scene 6: Tea & Games" : "Scene 7: Goodbye");
+        document.getElementById('character-name').innerText = line.r;
+        document.getElementById('character-img').innerText = line.e;
+        document.getElementById('dialogue').innerText = line.t;
+ 
+        // Update Theme Color
+        const stage = document.getElementById('stage');
+        stage.className = ''; // clear classes
+        stage.classList.add('scene-' + line.s);
+    }
+ 
+    function speakText(text) {
+        if (synth.speaking) {
+            synth.cancel();
+        }
+        const utterance = new SpeechSynthesisUtterance(text);
+        utterance.lang = 'en-US'; // 設定為美式發音
+        utterance.rate = 0.9; // 稍微放慢速度適合兒童
+        utterance.pitch = 1.1; // 稍微調高音調比較活潑
+        synth.speak(utterance);
+    }
+ 
+    function nextLine() {
+        if (currentIndex < scriptData.length - 1) {
+            currentIndex++;
+            updateDisplay();
+            speakText(scriptData[currentIndex].t);
+        }
+    }
+ 
+    function prevLine() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            updateDisplay();
+        }
+    }
+</script>
+ 
+</body>
+</html>
