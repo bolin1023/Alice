@@ -1,0 +1,211 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2113.6">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Helvetica; min-height: 14.0px}
+    span.s1 {font: 12.0px 'PingFang SC'}
+    span.s2 {font: 12.0px 'Apple Color Emoji'}
+    span.s3 {font: 12.0px 'Lucida Grande'}
+  </style>
+</head>
+<body>
+<p class="p1">&lt;!DOCTYPE html&gt;</p>
+<p class="p1">&lt;html lang="zh-TW"&gt;</p>
+<p class="p1">&lt;head&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta charset="UTF-8"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;title&gt;Alice Script - Part 1&lt;/title&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;style&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>body {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>background-color: #fff5e6;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>display: flex;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>flex-direction: column;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>align-items: center;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>justify-content: center;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>height: 100vh;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>margin: 0;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>overflow: hidden;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>#stage {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>width: 90%;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>max-width: 600px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>background: white;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 20px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>box-shadow: 0 10px 25px rgba(0,0,0,0.2);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>padding: 30px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>text-align: center;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>position: relative;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>min-height: 400px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>display: flex;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>flex-direction: column;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>justify-content: space-between;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>transition: border-color 0.5s;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>#scene-title {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>font-size: 1.2rem;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>color: #666;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>margin-bottom: 10px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>font-weight: bold;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>#character-img {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>font-size: 80px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>margin: 20px 0;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>animation: bounce 2s infinite;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>#character-name {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>font-size: 1.5rem;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>color: #d63384;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>font-weight: bold;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>margin-bottom: 10px;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>#dialogue {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>font-size: 1.4rem;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>line-height: 1.5;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>color: #333;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>min-height: 120px; /* <span class="s1">增加一點高度</span> */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.controls {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>display: flex;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>justify-content: space-between;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>margin-top: 20px;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>button {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>padding: 15px 30px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>font-size: 1.2rem;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>border: none;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>border-radius: 50px;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>cursor: pointer;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>transition: transform 0.1s;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>button:active { transform: scale(0.95); }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>#btn-prev { background-color: #ccc; color: #333; }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>#btn-next { background-color: #FF9800; color: white; font-weight: bold; flex-grow: 1; margin-left: 10px;}</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>@keyframes bounce {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>0%, 100% { transform: translateY(0); }</p>
+<p class="p1"><span class="Apple-converted-space">            </span>50% { transform: translateY(-10px); }</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>/* Scene Themes */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.scene-1 { border-top: 10px solid #8bc34a; } /* Garden - Green */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.scene-2 { border-top: 10px solid #e91e63; } /* Roses - Red */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.scene-3 { border-top: 10px solid #673ab7; } /* Falling - Purple */</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.scene-4 { border-top: 10px solid #f44336; } /* Queen's Rules - Dark Red */</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/style&gt;</p>
+<p class="p1">&lt;/head&gt;</p>
+<p class="p1">&lt;body&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;div id="stage" class="scene-1"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="scene-title"&gt;Scene 1: The Garden&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="character-img"&gt;<span class="s2">👱‍♀️</span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="character-name"&gt;Alice&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div id="dialogue"&gt;Click "Next" to start Part 1!&lt;/div&gt;</p>
+<p class="p2"><span class="Apple-converted-space">    </span></p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="controls"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;button id="btn-prev" onclick="prevLine()"&gt;Back&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>&lt;button id="btn-next" onclick="nextLine()"&gt;Next (Speak) <span class="s3">▶</span>&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1">&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;script&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>// <span class="s1">劇本資料庫</span> - Part 1</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const scriptData = [</p>
+<p class="p1"><span class="Apple-converted-space">        </span>// --- Scene 1: The Garden ---</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ s: 1, r: "Narrator", e: "<span class="s2">📖</span>", t: "Alice is bored in the garden." },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ s: 1, r: "Alice", e: "<span class="s2">👱‍♀️</span>", t: "I'm so bored! What can I do?" },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ s: 1, r: "Rabbit", e: "<span class="s2">🐰</span>", t: "Oh dear! I am late! Are you coming?" },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ s: 1, r: "Alice", e: "<span class="s2">👱‍♀️</span>", t: "Me? Wait! Where are you going?" },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ s: 1, r: "Rabbit", e: "<span class="s2">🐰</span>", t: "Follow me! Hurry!" },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ s: 1, r: "Alice", e: "<span class="s2">👱‍♀️</span>", t: "Hey ~ wait!" },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ s: 1, r: "Cat", e: "<span class="s2">😼</span>", t: "Hello! Are you chasing the rabbit?" },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ s: 1, r: "Alice", e: "<span class="s2">👱‍♀️</span>", t: "Yes! Can you help me?" },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ s: 1, r: "Cat", e: "<span class="s2">😼</span>", t: "Maybe! I like fun." },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ s: 1, r: "Hatter", e: "<span class="s2">🎩</span>", t: "Who is late? Tea party is ready!" },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ s: 1, r: "Cat", e: "<span class="s2">😼</span>", t: "Great! I can't wait! Alice, this way." },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ s: 1, r: "Hatter", e: "<span class="s2">🎩</span>", t: "Everyone! We are going to jump. Ready!" },</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// --- Scene 2: The Roses Intro ---</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ s: 2, r: "Card 1", e: "<span class="s2">🃏</span>", t: "Hi! You know. These roses belong to the Queen." },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ s: 2, r: "Card 2", e: "<span class="s2">🃏</span>", t: "The queen likes red roses!" },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ s: 2, r: "Cards", e: "<span class="s2">🃏</span>", t: "We have to paint the roses red!" },</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// --- Scene 3: The Fall ---</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ s: 3, r: "Narrator", e: "<span class="s2">📖</span>", t: "Alice follows the rabbit and falls into a hole." },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ s: 3, r: "Alice", e: "<span class="s2">👱‍♀️</span>", t: "Whoa! I am falling!" },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ s: 3, r: "Rabbit", e: "<span class="s2">🐰</span>", t: "Watch out everyone! Alice, are you scared?" },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ s: 3, r: "Alice", e: "<span class="s2">👱‍♀️</span>", t: "Yes~! Help~" },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ s: 3, r: "Cheshire Cat", e: "<span class="s2">😼</span>", t: "Falling is funny, don't you think?" },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ s: 3, r: "Alice", e: "<span class="s2">👱‍♀️</span>", t: "No~! I am spinning! Are you spinning too, Hatter?" },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ s: 3, r: "Hatter", e: "<span class="s2">🎩</span>", t: "I like spinning! Don't worry, Just relax." },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ s: 3, r: "All", e: "<span class="s2">👨‍👩‍👧‍👦</span>", t: "Ouch! Land~" },</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// --- Scene 4: Arrival / Warning ---</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ s: 4, r: "Card 1", e: "<span class="s2">🃏</span>", t: "Hey you! Don't touch the roses." },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ s: 4, r: "Card 2", e: "<span class="s2">🃏</span>", t: "Or Queen of Hearts will be mad." },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ s: 4, r: "Cards", e: "<span class="s2">🃏</span>", t: "The Queen is scary...." },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>{ s: 4, r: "All", e: "<span class="s2">👨‍👩‍👧‍👦</span>", t: "Okay!" }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>];</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>let currentIndex = -1;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const synth = window.speechSynthesis;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>function updateDisplay() {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (currentIndex &lt; 0) return;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const line = scriptData[currentIndex];</p>
+<p class="p2"><span class="Apple-converted-space">        </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// Update Title based on scene number</p>
+<p class="p1"><span class="Apple-converted-space">        </span>let sceneName = "";</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if(line.s === 1) sceneName = "Scene 1: The Garden";</p>
+<p class="p1"><span class="Apple-converted-space">        </span>else if(line.s === 2) sceneName = "Scene 2: Red Roses";</p>
+<p class="p1"><span class="Apple-converted-space">        </span>else if(line.s === 3) sceneName = "Scene 3: Down the Hole";</p>
+<p class="p1"><span class="Apple-converted-space">        </span>else sceneName = "Scene 4: The Queen's Rules";</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById('scene-title').innerText = sceneName;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById('character-name').innerText = line.r;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById('character-img').innerText = line.e;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById('dialogue').innerText = line.t;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">        </span>// Update Theme Color</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const stage = document.getElementById('stage');</p>
+<p class="p1"><span class="Apple-converted-space">        </span>stage.className = '';<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>stage.classList.add('scene-' + line.s);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>function speakText(text) {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (synth.speaking) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>synth.cancel();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const utterance = new SpeechSynthesisUtterance(text);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>utterance.lang = 'en-US';<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>utterance.rate = 0.9;<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>utterance.pitch = 1.1;<span class="Apple-converted-space"> </span></p>
+<p class="p1"><span class="Apple-converted-space">        </span>synth.speak(utterance);</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>function nextLine() {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (currentIndex &lt; scriptData.length - 1) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>currentIndex++;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>updateDisplay();</p>
+<p class="p1"><span class="Apple-converted-space">            </span>speakText(scriptData[currentIndex].t);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>function prevLine() {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if (currentIndex &gt; 0) {</p>
+<p class="p1"><span class="Apple-converted-space">            </span>currentIndex--;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>updateDisplay();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1">&lt;/script&gt;</p>
+<p class="p2"><br></p>
+<p class="p1">&lt;/body&gt;</p>
+<p class="p1">&lt;/html&gt;</p>
+</body>
+</html>
