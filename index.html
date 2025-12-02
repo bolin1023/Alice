@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alice Script - Part 1</title>
+    <title>Alice Script - Part 1 (Final Layout)</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -16,6 +16,48 @@
             margin: 0;
             overflow: hidden;
         }
+        
+        /* 設定區域容器 */
+        .settings-bar {
+            position: absolute;
+            top: 15px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 10px 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column; /* 垂直堆疊 */
+            gap: 5px; /* 兩列之間的間距 */
+            align-items: flex-start; /* 讓內容靠左對齊 */
+            justify-content: center;
+            z-index: 10;
+            width: 90%;
+            max-width: 500px; /* 稍微縮小以配合兩列 */
+        }
+        
+        /* 每一列設定的樣式 */
+        .setting-row { 
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding: 5px 0;
+        }
+
+        label {
+            margin-right: 5px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            min-width: 60px; /* 確保標籤對齊 */
+        }
+
+        select {
+            font-size: 1rem;
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            flex-grow: 1; /* 讓選單佔滿剩餘空間 */
+        }
+
         #stage {
             width: 90%;
             max-width: 600px;
@@ -25,21 +67,24 @@
             padding: 30px;
             text-align: center;
             position: relative;
-            min-height: 400px;
+            min-height: 450px;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             transition: border-color 0.5s;
+            margin-top: 100px; /* 騰出足夠空間給兩列設定區 */
         }
+        
+        /* [保持其他樣式不變] */
         #scene-title {
             font-size: 1.2rem;
             color: #666;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
             font-weight: bold;
         }
         #character-img {
             font-size: 80px;
-            margin: 20px 0;
+            margin: 10px 0;
             animation: bounce 2s infinite;
         }
         #character-name {
@@ -52,24 +97,29 @@
             font-size: 1.4rem;
             line-height: 1.5;
             color: #333;
-            min-height: 120px; /* 增加一點高度 */
+            min-height: 100px;
+            margin-bottom: 20px;
         }
         .controls {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 2fr; 
+            gap: 10px;
+            margin-top: auto;
         }
         button {
-            padding: 15px 30px;
-            font-size: 1.2rem;
+            padding: 15px 10px;
+            font-size: 1rem;
             border: none;
-            border-radius: 50px;
+            border-radius: 15px;
             cursor: pointer;
             transition: transform 0.1s;
+            font-weight: bold;
         }
         button:active { transform: scale(0.95); }
-        #btn-prev { background-color: #ccc; color: #333; }
-        #btn-next { background-color: #FF9800; color: white; font-weight: bold; flex-grow: 1; margin-left: 10px;}
+        
+        #btn-prev { background-color: #e0e0e0; color: #333; }
+        #btn-replay { background-color: #2196F3; color: white; } 
+        #btn-next { background-color: #FF9800; color: white; font-size: 1.2rem; }
         
         @keyframes bounce {
             0%, 100% { transform: translateY(0); }
@@ -77,26 +127,45 @@
         }
         
         /* Scene Themes */
-        .scene-1 { border-top: 10px solid #8bc34a; } /* Garden - Green */
-        .scene-2 { border-top: 10px solid #e91e63; } /* Roses - Red */
-        .scene-3 { border-top: 10px solid #673ab7; } /* Falling - Purple */
-        .scene-4 { border-top: 10px solid #f44336; } /* Queen's Rules - Dark Red */
+        .scene-1 { border-top: 10px solid #8bc34a; }
+        .scene-2 { border-top: 10px solid #e91e63; }
+        .scene-3 { border-top: 10px solid #673ab7; }
+        .scene-4 { border-top: 10px solid #f44336; }
     </style>
 </head>
 <body>
- 
+
+<div class="settings-bar">
+    <div class="setting-row">
+        <label for="voiceSelect">🗣️ Voice:</label>
+        <select id="voiceSelect">
+            <option value="">Loading...</option>
+        </select>
+    </div>
+    
+    <div class="setting-row">
+        <label for="rateSelect">⏱️ Speed:</label>
+        <select id="rateSelect">
+            <option value="0.9">Normal (正常)</option>
+            <option value="0.7">Slow (慢)</option>
+            <option value="0.5" selected>Slower (更慢)</option>
+        </select>
+    </div>
+</div>
+
 <div id="stage" class="scene-1">
-    <div id="scene-title">Scene 1: The Garden</div>
+    <div id="scene-title"> </div>
     <div id="character-img">👱‍♀️</div>
-    <div id="character-name">Alice</div>
-    <div id="dialogue">Click "Next" to start Part 1!</div>
+    <div id="character-name">Alice in Wonderland</div>
+    <div id="dialogue">Select Voice & Speed above, then click "Next"!</div>
     
     <div class="controls">
         <button id="btn-prev" onclick="prevLine()">Back</button>
-        <button id="btn-next" onclick="nextLine()">Next (Speak) ▶</button>
+        <button id="btn-replay" onclick="replayLine()">Replay 🔄</button>
+        <button id="btn-next" onclick="nextLine()">Next ▶</button>
     </div>
 </div>
- 
+
 <script>
     // 劇本資料庫 - Part 1
     const scriptData = [
@@ -113,65 +182,122 @@
         { s: 1, r: "Hatter", e: "🎩", t: "Who is late? Tea party is ready!" },
         { s: 1, r: "Cat", e: "😼", t: "Great! I can't wait! Alice, this way." },
         { s: 1, r: "Hatter", e: "🎩", t: "Everyone! We are going to jump. Ready!" },
- 
-        // --- Scene 2: The Roses Intro ---
-        { s: 2, r: "Card 1", e: "🃏", t: "Hi! You know. These roses belong to the Queen." },
-        { s: 2, r: "Card 2", e: "🃏", t: "The queen likes red roses!" },
-        { s: 2, r: "Cards", e: "🃏", t: "We have to paint the roses red!" },
- 
-        // --- Scene 3: The Fall ---
-        { s: 3, r: "Narrator", e: "📖", t: "Alice follows the rabbit and falls into a hole." },
-        { s: 3, r: "Alice", e: "👱‍♀️", t: "Whoa! I am falling!" },
-        { s: 3, r: "Rabbit", e: "🐰", t: "Watch out everyone! Alice, are you scared?" },
-        { s: 3, r: "Alice", e: "👱‍♀️", t: "Yes~! Help~" },
-        { s: 3, r: "Cheshire Cat", e: "😼", t: "Falling is funny, don't you think?" },
-        { s: 3, r: "Alice", e: "👱‍♀️", t: "No~! I am spinning! Are you spinning too, Hatter?" },
-        { s: 3, r: "Hatter", e: "🎩", t: "I like spinning! Don't worry, Just relax." },
-        { s: 3, r: "All", e: "👨‍👩‍👧‍👦", t: "Ouch! Land~" },
- 
-        // --- Scene 4: Arrival / Warning ---
-        { s: 4, r: "Card 1", e: "🃏", t: "Hey you! Don't touch the roses." },
-        { s: 4, r: "Card 2", e: "🃏", t: "Or Queen of Hearts will be mad." },
-        { s: 4, r: "Cards", e: "🃏", t: "The Queen is scary...." },
-        { s: 4, r: "All", e: "👨‍👩‍👧‍👦", t: "Okay!" }
+        { s: 1, r: "Card 1", e: "🃏", t: "Hi! You know. These roses belong to the Queen." },
+        { s: 1, r: "Card 2", e: "🃏", t: "The queen likes red roses!" },
+        { s: 1, r: "Cards", e: "🃏", t: "We have to paint the roses red!" },
+
+        // --- Scene 2: The Fall ---
+        { s: 2, r: "Narrator", e: "📖", t: "Alice follows the rabbit and falls into a hole." },
+        { s: 2, r: "Alice", e: "👱‍♀️", t: "Whoa! I am falling!" },
+        { s: 2, r: "Rabbit", e: "🐰", t: "Watch out everyone! Alice, are you scared?" },
+        { s: 2, r: "Alice", e: "👱‍♀️", t: "Yes~! Help~" },
+        { s: 2, r: "Cheshire Cat", e: "😼", t: "Falling is funny, don't you think?" },
+        { s: 2, r: "Alice", e: "👱‍♀️", t: "No~! I am spinning! Are you spinning too, Hatter?" },
+        { s: 2, r: "Hatter", e: "🎩", t: "I like spinning! Don't worry, Just relax." },
+        { s: 2, r: "All", e: "👨‍👩‍👧‍👦", t: "Ouch! Land~" },
+        { s: 2, r: "Card 1", e: "🃏", t: "Hey you! Don't touch the roses." },
+        { s: 2, r: "Card 2", e: "🃏", t: "Or Queen of Hearts will be mad." },
+        { s: 2, r: "Cards", e: "🃏", t: "The Queen is scary...." },
+        { s: 2, r: "All", e: "👨‍👩‍👧‍👦", t: "Okay!" }
     ];
- 
+
     let currentIndex = -1;
     const synth = window.speechSynthesis;
- 
+    let voices = [];
+    const voiceSelect = document.getElementById('voiceSelect');
+    const rateSelect = document.getElementById('rateSelect'); 
+
+    // 1. 載入並列出所有可用的聲音 (並設定 Samantha 為預設)
+    function populateVoiceList() {
+        voices = synth.getVoices().sort(function (a, b) {
+            const aname = a.name.toUpperCase(), bname = b.name.toUpperCase();
+            if ( aname < bname ) return -1;
+            if ( aname > bname ) return 1;
+            return 0;
+        });
+        
+        voiceSelect.innerHTML = '';
+        const defaultOption = document.createElement('option');
+        defaultOption.textContent = '-- Choose Voice --';
+        voiceSelect.appendChild(defaultOption);
+
+        const englishVoices = voices.filter(v => v.lang.includes('en'));
+        let samanthaFound = false;
+
+        englishVoices.forEach((voice) => {
+            const option = document.createElement('option');
+            // 簡化顯示名稱
+            option.textContent = `${voice.name.replace('Microsoft', '').replace('Google', '')}`; 
+            option.setAttribute('data-lang', voice.lang);
+            option.setAttribute('data-name', voice.name);
+            
+            // 設定 Samantha 為預設
+            if (voice.name.includes('Samantha')) {
+                option.selected = true;
+                samanthaFound = true;
+            }
+
+            voiceSelect.appendChild(option);
+        });
+
+        // 如果 Samantha 沒找到，則選取清單中的第一個英文語音作為預設
+        if (!samanthaFound && englishVoices.length > 0) {
+             voiceSelect.selectedIndex = 1; // 選擇第一個有效的語音 (index 0 是 --Choose Voice--)
+        }
+    }
+
+    populateVoiceList();
+    if (speechSynthesis.onvoiceschanged !== undefined) {
+        speechSynthesis.onvoiceschanged = populateVoiceList;
+    }
+
+    // 2. 更新畫面顯示
     function updateDisplay() {
         if (currentIndex < 0) return;
         const line = scriptData[currentIndex];
         
-        // Update Title based on scene number
         let sceneName = "";
-        if(line.s === 1) sceneName = "Scene 1: The Garden";
-        else if(line.s === 2) sceneName = "Scene 2: Red Roses";
+        if(line.s === 1) sceneName = "Scene 1: Curious Garden";
+        else if(line.s === 2) sceneName = "Scene 2: The Rabbit Hole";
         else if(line.s === 3) sceneName = "Scene 3: Down the Hole";
         else sceneName = "Scene 4: The Queen's Rules";
- 
+
         document.getElementById('scene-title').innerText = sceneName;
         document.getElementById('character-name').innerText = line.r;
         document.getElementById('character-img').innerText = line.e;
         document.getElementById('dialogue').innerText = line.t;
- 
-        // Update Theme Color
+
         const stage = document.getElementById('stage');
         stage.className = ''; 
         stage.classList.add('scene-' + line.s);
     }
- 
+
+    // 3. 朗讀功能 (加入聲音與語速控制)
     function speakText(text) {
         if (synth.speaking) {
             synth.cancel();
         }
         const utterance = new SpeechSynthesisUtterance(text);
-        utterance.lang = 'en-US'; 
-        utterance.rate = 0.8; 
-        utterance.pitch = 1.5; 
+        
+        // A. 設定聲音
+        const selectedOption = voiceSelect.selectedOptions[0];
+        if (selectedOption && selectedOption.getAttribute('data-name')) {
+            const selectedVoiceName = selectedOption.getAttribute('data-name');
+            const selectedVoice = voices.find(v => v.name === selectedVoiceName);
+            if (selectedVoice) utterance.voice = selectedVoice;
+        } else {
+            utterance.lang = 'en-US'; 
+        }
+
+        // B. 設定語速 (從選單讀取)
+        const selectedRate = parseFloat(rateSelect.value);
+        utterance.rate = selectedRate;
+
+        utterance.pitch = 1.1; 
         synth.speak(utterance);
     }
- 
+
+    // 4. 按鈕功能
     function nextLine() {
         if (currentIndex < scriptData.length - 1) {
             currentIndex++;
@@ -179,14 +305,20 @@
             speakText(scriptData[currentIndex].t);
         }
     }
- 
+
     function prevLine() {
         if (currentIndex > 0) {
             currentIndex--;
             updateDisplay();
         }
     }
+
+    function replayLine() {
+        if (currentIndex >= 0) {
+            speakText(scriptData[currentIndex].t);
+        }
+    }
 </script>
- 
+
 </body>
 </html>
