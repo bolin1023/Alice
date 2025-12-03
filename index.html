@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alice Script - Part 1 (Final Layout)</title>
+    <title>Alice Script - Segmented Audio Playback (S1-S4)</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -17,47 +17,6 @@
             overflow: hidden;
         }
         
-        /* 設定區域容器 */
-        .settings-bar {
-            position: absolute;
-            top: 15px;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 10px 20px;
-            border-radius: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            display: flex;
-            flex-direction: column; /* 垂直堆疊 */
-            gap: 5px; /* 兩列之間的間距 */
-            align-items: flex-start; /* 讓內容靠左對齊 */
-            justify-content: center;
-            z-index: 10;
-            width: 90%;
-            max-width: 500px; /* 稍微縮小以配合兩列 */
-        }
-        
-        /* 每一列設定的樣式 */
-        .setting-row { 
-            display: flex;
-            align-items: center;
-            width: 100%;
-            padding: 5px 0;
-        }
-
-        label {
-            margin-right: 5px;
-            font-weight: bold;
-            font-size: 0.9rem;
-            min-width: 60px; /* 確保標籤對齊 */
-        }
-
-        select {
-            font-size: 1rem;
-            padding: 5px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-            flex-grow: 1; /* 讓選單佔滿剩餘空間 */
-        }
-
         #stage {
             width: 90%;
             max-width: 600px;
@@ -72,10 +31,10 @@
             flex-direction: column;
             justify-content: space-between;
             transition: border-color 0.5s;
-            margin-top: 100px; /* 騰出足夠空間給兩列設定區 */
+            margin-top: 0; 
         }
         
-        /* [保持其他樣式不變] */
+        /* [其他樣式保持不變] */
         #scene-title {
             font-size: 1.2rem;
             color: #666;
@@ -126,38 +85,20 @@
             50% { transform: translateY(-10px); }
         }
         
-        /* Scene Themes */
+        /* Scene Themes (延續舊版配色) */
         .scene-1 { border-top: 10px solid #8bc34a; }
         .scene-2 { border-top: 10px solid #e91e63; }
-        .scene-3 { border-top: 10px solid #673ab7; }
-        .scene-4 { border-top: 10px solid #f44336; }
     </style>
 </head>
 <body>
 
-<div class="settings-bar">
-    <div class="setting-row">
-        <label for="voiceSelect">🗣️ Voice:</label>
-        <select id="voiceSelect">
-            <option value="">Loading...</option>
-        </select>
-    </div>
-    
-    <div class="setting-row">
-        <label for="rateSelect">⏱️ Speed:</label>
-        <select id="rateSelect">
-            <option value="0.9">Normal (正常)</option>
-            <option value="0.7">Slow (慢)</option>
-            <option value="0.5" selected>Slower (更慢)</option>
-        </select>
-    </div>
-</div>
+<audio id="dialogue-audio" src="alice.m4a"></audio>
 
 <div id="stage" class="scene-1">
-    <div id="scene-title"> </div>
-    <div id="character-img">👱‍♀️</div>
-    <div id="character-name">Alice in Wonderland</div>
-    <div id="dialogue">Select Voice & Speed above, then click "Next"!</div>
+    <div id="scene-title">Scene 1: The Garden</div>
+    <div id="character-img">📖</div>
+    <div id="character-name">Narrator</div>
+    <div id="dialogue">Click "Next" to start playing the scene.</div>
     
     <div class="controls">
         <button id="btn-prev" onclick="prevLine()">Back</button>
@@ -167,100 +108,56 @@
 </div>
 
 <script>
-    // 劇本資料庫 - Part 1
+    // 劇本資料庫 - 第 1, 2, 3, 4 場景內容 (根據您提供的 alice.m4a 音訊內容和時間戳記)
+    // start 和 end 為時間標記 (秒)
     const scriptData = [
-        // --- Scene 1: The Garden ---
-        { s: 1, r: "Narrator", e: "📖", t: "Alice is bored in the garden." },
-        { s: 1, r: "Alice", e: "👱‍♀️", t: "I'm so bored! What can I do?" },
-        { s: 1, r: "Rabbit", e: "🐰", t: "Oh dear! I am late! Are you coming?" },
-        { s: 1, r: "Alice", e: "👱‍♀️", t: "Me? Wait! Where are you going?" },
-        { s: 1, r: "Rabbit", e: "🐰", t: "Follow me! Hurry!" },
-        { s: 1, r: "Alice", e: "👱‍♀️", t: "Hey ~ wait!" },
-        { s: 1, r: "Cat", e: "😼", t: "Hello! Are you chasing the rabbit?" },
-        { s: 1, r: "Alice", e: "👱‍♀️", t: "Yes! Can you help me?" },
-        { s: 1, r: "Cat", e: "😼", t: "Maybe! I like fun." },
-        { s: 1, r: "Hatter", e: "🎩", t: "Who is late? Tea party is ready!" },
-        { s: 1, r: "Cat", e: "😼", t: "Great! I can't wait! Alice, this way." },
-        { s: 1, r: "Hatter", e: "🎩", t: "Everyone! We are going to jump. Ready!" },
-        { s: 1, r: "Card 1", e: "🃏", t: "Hi! You know. These roses belong to the Queen." },
-        { s: 1, r: "Card 2", e: "🃏", t: "The queen likes red roses!" },
-        { s: 1, r: "Cards", e: "🃏", t: "We have to paint the roses red!" },
+        // --- Scene 1: Curious Garden ---
+        { s: 1, r: "Narrator", e: "📖", t: "Alice is bored in the garden.", start: 0.00, end: 3.15 },
+        { s: 1, r: "Alice", e: "👱‍♀️", t: "Oh, I'm so bored. What can I do?", start: 3.15, end: 8.00 },
+        { s: 1, r: "Rabbit", e: "🐰", t: "Oh dear! I'm late. Are you coming?", start: 8.00, end: 13.00 },
+        { s: 1, r: "Alice", e: "👱‍♀️", t: "Me? Wait! Where are you going?", start: 13.00, end: 18.00 },
+        { s: 1, r: "Rabbit", e: "🐰", t: "Follow me! Hurry!", start: 18.00, end: 20.15 },
+        { s: 1, r: "Alice", e: "👱‍♀️", t: "Hey, wait.", start: 20.15, end: 24.00 },
+        { s: 1, r: "Cat", e: "😼", t: "Hello. Are you chasing the rabbit?", start: 24.00, end: 28.00 },
+        { s: 1, r: "Alice", e: "👱‍♀️", t: "Yes. Can you help me?", start: 28.00, end: 32.00 },
+        { s: 1, r: "Cat", e: "😼", t: "Maybe. I like fun.", start: 32.00, end: 35.00 },
+        { s: 1, r: "Hatter", e: "🎩", t: "Who is late? Tea party is ready!", start: 35.00, end: 40.00 },
+        { s: 1, r: "Cat", e: "😼", t: "Great! I can't wait. Alice, this way.", start: 40.00, end: 45.00 },
+        { s: 1, r: "Hatter", e: "🎩", t: "Everyone, we're going to jump. Ready!", start: 45.50, end: 51.00 },
+        { s: 1, r: "Card 1", e: "🃏", t: "Hi daddy mommy. You know, these flowers belong to the Queen.", start: 51.50, end: 60.00 },
+        { s: 1, r: "Card 2", e: "🃏", t: "The Queen likes red roses.", start: 60.00, end: 63.00 },
+        { s: 1, r: "Cards", e: "🃏", t: "We have to paint the roses red.", start: 63.00, end: 67.00 },
 
-        // --- Scene 2: The Fall ---
-        { s: 2, r: "Narrator", e: "📖", t: "Alice follows the rabbit and falls into a hole." },
-        { s: 2, r: "Alice", e: "👱‍♀️", t: "Whoa! I am falling!" },
-        { s: 2, r: "Rabbit", e: "🐰", t: "Watch out everyone! Alice, are you scared?" },
-        { s: 2, r: "Alice", e: "👱‍♀️", t: "Yes~! Help~" },
-        { s: 2, r: "Cheshire Cat", e: "😼", t: "Falling is funny, don't you think?" },
-        { s: 2, r: "Alice", e: "👱‍♀️", t: "No~! I am spinning! Are you spinning too, Hatter?" },
-        { s: 2, r: "Hatter", e: "🎩", t: "I like spinning! Don't worry, Just relax." },
-        { s: 2, r: "All", e: "👨‍👩‍👧‍👦", t: "Ouch! Land~" },
-        { s: 2, r: "Card 1", e: "🃏", t: "Hey you! Don't touch the roses." },
-        { s: 2, r: "Card 2", e: "🃏", t: "Or Queen of Hearts will be mad." },
-        { s: 2, r: "Cards", e: "🃏", t: "The Queen is scary...." },
-        { s: 2, r: "All", e: "👨‍👩‍👧‍👦", t: "Okay!" }
+        // --- Scene 2: The Rabbit Hole ---
+        { s: 2, r: "Narrator", e: "📖", t: "Alice followed the rabbit and falls into a hole.", start: 67.00, end: 73.00 },
+        { s: 2, r: "Alice", e: "👱‍♀️", t: "Whoa! I'm falling.", start: 73.00, end: 77.50 },
+        { s: 2, r: "Rabbit", e: "🐰", t: "Watch out everyone! Alice, are you scared?", start: 77.50, end: 82.50 },
+        { s: 2, r: "Alice", e: "👱‍♀️", t: "Yes, help.", start: 82.50, end: 85.18 },
+        { s: 2, r: "Cheshire Cat", e: "😼", t: "Falling is funny, don't you think?", start: 85.18, end: 89.50 },
+        { s: 2, r: "Alice", e: "👱‍♀️", t: "No, I am spinning. Are you spinny too, Hatter?", start: 89.50, end: 96.00 },
+        { s: 2, r: "Hatter", e: "🎩", t: "I like spinny. Don't worry, just relax.", start: 96.00, end: 102.50 },
+        { s: 2, r: "All", e: "👨‍👩‍👧‍👦", t: "Ouch! Land!", start: 102.50, end: 106.50 },
+        { s: 2, r: "Card 1", e: "🃏", t: "Hey you, don't touch the roses.", start: 106.50, end: 111.5 },
+        { s: 2, r: "Card 2", e: "🃏", t: "Or the Queen of Hearts will be mad.", start: 111.5, end: 116.00 },
+        { s: 2, r: "Cards", e: "🃏", t: "Oh, the Queen is scary.", start: 116.00, end: 120.00 },
+        { s: 2, r: "All", e: "👨‍👩‍👧‍👦", t: "Okay, let's go.", start: 120.00, end: 123.00 }
     ];
 
     let currentIndex = -1;
-    const synth = window.speechSynthesis;
-    let voices = [];
-    const voiceSelect = document.getElementById('voiceSelect');
-    const rateSelect = document.getElementById('rateSelect'); 
+    const dialogueAudio = document.getElementById('dialogue-audio');
+    let stopTimer = null; // 用來儲存計時器，確保停止準確
 
-    // 1. 載入並列出所有可用的聲音 (並設定 Samantha 為預設)
-    function populateVoiceList() {
-        voices = synth.getVoices().sort(function (a, b) {
-            const aname = a.name.toUpperCase(), bname = b.name.toUpperCase();
-            if ( aname < bname ) return -1;
-            if ( aname > bname ) return 1;
-            return 0;
-        });
-        
-        voiceSelect.innerHTML = '';
-        const defaultOption = document.createElement('option');
-        defaultOption.textContent = '-- Choose Voice --';
-        voiceSelect.appendChild(defaultOption);
-
-        const englishVoices = voices.filter(v => v.lang.includes('en'));
-        let samanthaFound = false;
-
-        englishVoices.forEach((voice) => {
-            const option = document.createElement('option');
-            // 簡化顯示名稱
-            option.textContent = `${voice.name.replace('Microsoft', '').replace('Google', '')}`; 
-            option.setAttribute('data-lang', voice.lang);
-            option.setAttribute('data-name', voice.name);
-            
-            // 設定 Samantha 為預設
-            if (voice.name.includes('Samantha')) {
-                option.selected = true;
-                samanthaFound = true;
-            }
-
-            voiceSelect.appendChild(option);
-        });
-
-        // 如果 Samantha 沒找到，則選取清單中的第一個英文語音作為預設
-        if (!samanthaFound && englishVoices.length > 0) {
-             voiceSelect.selectedIndex = 1; // 選擇第一個有效的語音 (index 0 是 --Choose Voice--)
-        }
-    }
-
-    populateVoiceList();
-    if (speechSynthesis.onvoiceschanged !== undefined) {
-        speechSynthesis.onvoiceschanged = populateVoiceList;
-    }
-
-    // 2. 更新畫面顯示
+    // 2. 更新畫面顯示 (與前版相同)
     function updateDisplay() {
         if (currentIndex < 0) return;
         const line = scriptData[currentIndex];
         
         let sceneName = "";
-        if(line.s === 1) sceneName = "Scene 1: Curious Garden";
-        else if(line.s === 2) sceneName = "Scene 2: The Rabbit Hole";
+        if(line.s === 1) sceneName = "Scene 1: The Garden";
+        else if(line.s === 2) sceneName = "Scene 2: Red Roses";
         else if(line.s === 3) sceneName = "Scene 3: Down the Hole";
-        else sceneName = "Scene 4: The Queen's Rules";
+        else if(line.s === 4) sceneName = "Scene 4: The Queen's Rules";
+        else sceneName = `Scene ${line.s}: Unknown Scene`; 
 
         document.getElementById('scene-title').innerText = sceneName;
         document.getElementById('character-name').innerText = line.r;
@@ -272,29 +169,27 @@
         stage.classList.add('scene-' + line.s);
     }
 
-    // 3. 朗讀功能 (加入聲音與語速控制)
-    function speakText(text) {
-        if (synth.speaking) {
-            synth.cancel();
-        }
-        const utterance = new SpeechSynthesisUtterance(text);
+    // 3. 播放音訊分段
+    function playSegment(start, end) {
+        // 1. 清除舊的停止計時器
+        clearTimeout(stopTimer);
         
-        // A. 設定聲音
-        const selectedOption = voiceSelect.selectedOptions[0];
-        if (selectedOption && selectedOption.getAttribute('data-name')) {
-            const selectedVoiceName = selectedOption.getAttribute('data-name');
-            const selectedVoice = voices.find(v => v.name === selectedVoiceName);
-            if (selectedVoice) utterance.voice = selectedVoice;
-        } else {
-            utterance.lang = 'en-US'; 
-        }
-
-        // B. 設定語速 (從選單讀取)
-        const selectedRate = parseFloat(rateSelect.value);
-        utterance.rate = selectedRate;
-
-        utterance.pitch = 1.1; 
-        synth.speak(utterance);
+        // 2. 設置音訊播放起始時間
+        dialogueAudio.currentTime = start;
+        
+        // 3. 播放音訊
+        dialogueAudio.play().catch(error => {
+            console.error("Audio playback failed:", error);
+            alert("無法播放音訊檔案。請確認檔案 'alice.m4a' 是否存在於相同目錄中。");
+        });
+        
+        // 4. 設定一個定時器，在結束時間到達時停止播放
+        const duration = (end - start);
+        stopTimer = setTimeout(() => {
+            dialogueAudio.pause();
+            // 可選：將 currentTime 設置為 start，方便下次重播
+            // dialogueAudio.currentTime = start; 
+        }, duration * 1000); // 轉換為毫秒
     }
 
     // 4. 按鈕功能
@@ -302,20 +197,29 @@
         if (currentIndex < scriptData.length - 1) {
             currentIndex++;
             updateDisplay();
-            speakText(scriptData[currentIndex].t);
+            
+            const line = scriptData[currentIndex];
+            playSegment(line.start, line.end);
         }
     }
 
     function prevLine() {
+        // 確保停止任何正在播放的聲音
+        clearTimeout(stopTimer);
+        dialogueAudio.pause();
+        dialogueAudio.currentTime = 0; 
+
         if (currentIndex > 0) {
             currentIndex--;
             updateDisplay();
+            // Prev 不自動播放，只顯示文字，如果需要播放請點 Replay
         }
     }
 
     function replayLine() {
         if (currentIndex >= 0) {
-            speakText(scriptData[currentIndex].t);
+            const line = scriptData[currentIndex];
+            playSegment(line.start, line.end);
         }
     }
 </script>
